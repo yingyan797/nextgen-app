@@ -1,14 +1,34 @@
 <head>
-    <title>House price regressor</title>
+    <title>Nextgen sample application</title>
 </head>
 
 <body>
-    <h1 style="background-color: aquamarine;">Image generation sample application</h1>
-    <h2>Describe the image you want to see:</h2>
+    <h1 style="background-color: aquamarine;">Clarifai API sample application for Nextgen GPT</h1>
     <form action="/" method="post">
-        <textarea name="prompt" cols="75" rows="2"></textarea>
-        <button type="submit">Generate Image</button>
+    <h2>Upload image to discuss about (Optional)</h2>
+    <input type="file" name="img"> -- from "static/" directory<br>
+    <h2>Describe your question/prompt:</h2>
+    <textarea name="prompt" cols="75" rows="2"></textarea><br>
+    <input type="submit" name="image_gen" value="Generate image">
+    <input type="submit" name="ask" value="Ask question (about the image if provided)">
+    <input type="submit" name="tts" value="Read the text aloud">
     </form>
-    <h2>Result image</h2>
-    <img src="static/result.png" alt="result">
+    {% if prompt %}
+    <h2>Question/Requirement:</h2>
+    {{prompt}}
+        {% if image_url %}
+        <img src="{{image_url}}" alt="question image">
+        {% endif %}
+    {% endif %}
+    {% if result==1 %}
+        <h2>Result image</h2>
+        <img src="static/res_image.png" alt="result">
+    {% elif result==3 %}
+        <h2>Result speech audio</h2>
+        <audio src="static/res_audio.mp3"></audio>
+    {% elif result==2 %}
+        <h2>AI answer to the question</h2>
+        <textarea cols="75" rows="10">{{answer}}</textarea>
+    {% endif %}
+    
     
