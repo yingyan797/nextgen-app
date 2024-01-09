@@ -15,9 +15,9 @@
     </form>
     {% if prompt %}
     <h2>Question/Requirement:</h2>
-    {{prompt}}
+    {{prompt}}<br>
         {% if image_url %}
-        <img src="{{image_url}}" alt="question image">
+        <img src="{{image_url}}" alt="question image" width="500" height="400">
         {% endif %}
     {% endif %}
     {% if result==1 %}
@@ -25,7 +25,7 @@
         <img src="static/res_image.png" alt="result">
     {% elif result==3 %}
         <h2>Result speech audio</h2>
-        <audio src="static/res_audio.mp3"></audio>
+        <audio controls><source src="static/res_audio.mp3" type="audio/mpeg"></audio>
     {% elif result==2 %}
         <h2>AI answer to the question</h2>
         <textarea cols="75" rows="10">{{answer}}</textarea>
