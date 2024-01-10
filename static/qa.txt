@@ -1,0 +1,47 @@
+--Q: Describe the conversation between two people when one asks the other the direction to the museum-- 
+Person 1: Excuse me, could you tell me how to get to the museum from here?
+
+Person 2: Sure! It's actually not too far from here. You'll want to head down this street for about two blocks until you reach the traffic light. Then, take a left onto Main Street and continue straight for about five minutes. The museum will be on your right-hand side, just past the library.
+
+Person 1: Great, thank you so much! So I just go straight down this street, take a left at the light, and it'll be on my right after the library?
+
+Person 2: Exactly. You can't miss it, there's a big sign out front.
+
+Person 1: Perfect, I really appreciate your help. Have a great day!
+
+Person 2: No problem, happy to help. Enjoy the museum!
+
+--Q: In which country is the photo mostly likely to be captured?-- static/qasralhosn.png
+The photo appears to be taken in a modern urban area with high-rise buildings and a well-lit waterfront promenade. The architectural style of the buildings, the presence of palm trees, and the overall appearance suggest that this could be in a country with a warm climate, possibly in the Middle East or a similar region. Countries like the United Arab Emirates, Qatar, or Bahrain are known for such urban landscapes. However, without more specific landmarks or signs, it's difficult to determine the exact country with certainty.
+
+--Q: Describe a way to separate the picture into two halves. How many colors appear in this picture? -- static/cube.png
+To separate the picture into two halves, you could draw a line from one corner to the opposite corner, effectively dividing the image into two triangular halves. This could be done for both the left and right images, either by drawing a line from the top corner to the bottom corner or from the left corner to the right corner, depending on the orientation you're considering.
+
+As for the number of colors, it's a bit challenging to give an exact count due to the resolution and potential color variations, but it appears there are multiple distinct colors including shades of red, blue, green, yellow, purple, and possibly others. If you need an exact count, I would need to analyze each individual dot, which is not feasible in this format.
+
+--Q: Look at the left and right pictures: which one has more light blue and yellow color areas?-- static/cube.png
+The image on the right has more light blue and yellow color areas compared to the image on the left. The distribution of colors is not symmetrical between the two images, and the right image clearly shows larger clusters of light blue and yellow dots.
+
+--Q: What should I wear for outdoors today?-- static/weather.png
+Given the weather information for Kharkhorin, Mongolia, showing sunny conditions with a temperature of -25°C, you should dress very warmly for outdoor activities. Here are some clothing recommendations:
+
+1. Thermal underwear: Start with a base layer of thermal underwear, which will help to retain body heat.
+
+2. Insulating layers: Add one or more insulating layers, such as a fleece jacket or a wool sweater, to trap warmth.
+
+3. Outer layer: Wear a windproof and waterproof jacket to protect against the elements. Make sure it's insulated or has room for the layers underneath.
+
+4. Pants: Choose insulated and windproof pants or wear thermal leggings under regular pants.
+
+5. Headwear: Wear a warm hat that covers your ears to prevent heat loss from your head.
+
+6. Gloves or mittens: Protect your hands with insulated gloves or mittens.
+
+7. Footwear: Insulated, waterproof boots are essential to keep your feet warm and dry.
+
+8. Socks: Thick, warm socks, possibly layered, will help keep your feet warm.
+
+9. Scarf or neck gaiter: Protect your neck from the cold with a scarf or neck gaiter.
+
+10. Sunglasses: Protect your eyes from the
+
