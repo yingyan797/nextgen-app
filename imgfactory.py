@@ -1,7 +1,8 @@
-from PIL import Image
+from PIL import Image, ImageDraw, ImageFont
 import numpy as np
 import os
-from matplotlib import pyplot as plt
+from answer_parser import Parser
+import models as mo
 
 def create_samples(group_name):
     img_template = np.zeros((100,100,3), dtype=np.uint8)
@@ -51,9 +52,20 @@ def img_combine(group_name):
             im = Image.open("static/"+group_name+'/'+str(i)+".png").resize(usz)
             img_template[c*wd:c*wd+usz[1], r*ht:r*ht+usz[0]] = im
             i += 1
-    Image.fromarray(img_template).save("static/"+group_name+"/all.png")
+    # mask = Image.new(mode="1", size=im_base.size)
+    Image.fromarray(img_template).save("static/"+group_name+"/allnum.png")
 
-# im = Image.open("static/southquay.jpg")
-# print(np.array(im).shape)
-# rsim = im.resize((200,50))
-# rsim.save("static/sqrs.jpg")
+def crop_multiple(img_name, instr):
+    im = Image.open(img_name)
+    i = 0
+    for pr in Parser(instr).crop_info():
+        w, h = im.size
+        wrange = w*pr[:2]
+        hrange = h*pr[2:]
+        imcr = im.crop((wrange[0], hrange[0], wrange[1], hrange[1]))
+        imcr.save("static/ai_crop/"+str(i)+".png")
+        i += 1
+
+# crop_multiple("static/dhabi.png", "To crop the image to focus on Al Lulu Island while maintaining the context of its location, you might consider the following percentage ranges: Width: 10% to 45%, Height: 5% to 50%, These ranges should help you")
+# img_combine("graphics")
+

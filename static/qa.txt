@@ -45,3 +45,14 @@ Given the weather information for Kharkhorin, Mongolia, showing sunny conditions
 
 10. Sunglasses: Protect your eyes from the
 
+--Q: how to crop al lulu island? provide percentage ranges on width and height I should keep the image; answer in this format: width a% to b%, height c% to d %-- static/dhabi.png
+To crop the image to focus on Al Lulu
+
+--Q: how to crop al lulu island? provide percentage ranges on width and height I should keep the image; answer in this format: width a% to b%, height c% to d %-- static/dhabi.png
+To crop the image to focus on Al Lulu Island while maintaining the context of its location, you might consider the following percentage ranges:
+
+Width: 10% to 45%
+Height: 5% to 50%
+
+These ranges should help you
+

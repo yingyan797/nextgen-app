@@ -3,8 +3,8 @@ import models as mo
 
 app = Flask(__name__)
 
-@app.route('/', methods=['GET', 'POST'])    # main page
-def index():
+@app.route('/sample', methods=['GET', 'POST'])    # main page
+def sample():
     prompt = request.form.get('prompt')
     print(request.form)
     res = 0 # image 1 answer 2 audio 3
@@ -21,13 +21,22 @@ def index():
             img = request.form.get('img')
             if img:
                 image_url = "static/"+img
-            ans = mo.answer(prompt=prompt, image_url=image_url, dest=dest)
+            mtoken = request.form.get("mtoken")
+            if mtoken:
+                mtoken = int(mtoken)
+            else:
+                mtoken = 250
+            ans = mo.answer(prompt=prompt, image_url=image_url, mtoken=mtoken, dest=dest)
             res = 2
         elif request.form.get('tts'):
             mo.text_speech(text=prompt, dest=dest)
             res = 3
     print(res)
-    return render_template('index.html', image_url=image_url, prompt=prompt, result=res, answer=ans)
+    return render_template('sample.html', image_url=image_url, prompt=prompt, result=res, answer=ans)
+
+@app.route('/', methods=['GET', 'POST'])    # main page
+def index():
+    return render_template('index.html')
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)

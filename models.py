@@ -17,7 +17,8 @@ def image_gen(prompt="Mongolian dance", infparams=dict(quality="standard", size=
     f.write(output_base64)
     f.close()
 
-def answer(prompt, image_url="", infparams=dict(temperature=0.2, max_tokens=250), dest=""):
+def answer(prompt, image_url="", mtoken = 250, infparams=dict(temperature=0.2), dest=""):
+    infparams["max_tokens"] = mtoken
     if image_url:
         f = open(image_url, "rb")
         b64img = base64.b64encode(f.read()).decode('utf-8')
