@@ -29,35 +29,38 @@
 
 <body>
     <h1 style="background-color: lightskyblue;">Y-Detective AI image operation and detection tools | <a href="/sample">Clarifai sample app</a></h1>
-    <form action="/imagelab" method="post">
-        <b style="font-size: large;"> - Create a folder for a class of images - </b> (e.g., suspect John Smith, unknown white car, etc.):
-        <input type="text" name="group"> <input type="submit" value="Create image class">
+    <form action="/" method="post">
+        <b style="font-size: large;"> - Mange images classes - </b> Enter or select a class name (e.g., suspect John Smith, unknown white car, etc.): 
+        <input type="text" name="groupt">
+        <select name="groupd">
+          {% for imgr in imggroups %}
+          <option value="{{imgr[0]}}">{{imgr[0]}} ({{imgr[1]}} images)</option>
+          {% endfor %}
+      </select><br>
+        <input type="submit" name="Create" value="Create image class"><input type="submit"  name="Remove" value="Remove image class">
     </form>
     <div class="row">
     <div class="column" style="background-color: lightgoldenrodyellow;">
-        <h2>Crop a set of useful objects from an image</h2>
-        <form action="/imagelab" method="post">
+        <h2>Find a set of useful objects from an image</h2>
+        <form action="/" method="post">
             <b>Upload an image to start: </b> <input type="file" name="imgcrop"><br>
-            <b>Describe the type of objects to emphasize:</b> e.g., human faces, id cards with photo and name, etc. <br>
+            <b>Describe all objects to emphasize. If belonging to the same category, describe the category:</b> 
+            e.g., human faces, id cards with photo and name, etc. <br>
             <textarea name="cropdesc" cols="50" rows="2"></textarea><br>
-            <b>Roughtly how many objects are there? </b>
-            <input type="radio" name="sz" value="1">Single (1); 
-            <input type="radio" name="sz" value="s">2-4; 
-            <input type="radio" name="sz" value="m">5-10; 
-            <input type="radio" name="sz" value="l">> 10; <br>
-            How large is each object relative to the image (optional)? <br>
-            <input type="radio" name="sz" value="s">Small (< 5%); 
-            <input type="radio" name="sz" value="m">Medium (5% - 20%); 
-            <input type="radio" name="sz" value="l">Large (> 20%); <br>
+            <b>Roughtly how many objects to find in total? </b>
+            <input type="radio" name="num" value="1">Single (1); 
+            <input type="radio" name="num" value="s">2-4; 
+            <input type="radio" name="num" value="m">5-10; 
+            <input type="radio" name="num" value="l">> 10; <br>
             <input type="submit" value="Crop image">
         </form>
         <h2>Result preview</h2>
-        <form action="/imagelab" method="post">
+        <form action="/" method="post">
             Save files folder name: <input type="text" name="savefolder">
             <input type="submit" value="Save image">
         </form>
         Original image: <br>
-        <img src="croporig" alt="Original"> <br>
+        <img src="{{croporig}}" alt="Original"> <br>
         Images containing detected objects: <br>
         {% for rsim in result %}
         <img src="{{rsim}}" alt="Result">
@@ -70,9 +73,9 @@
         <form action="/imagelab" method="post">
         Enter or select the class of image to find through: <br>
         <input type="text" name="imggroup"> 
-        <select name="imggroup">
+        <select name="group">
             {% for imgr in imggroups %}
-            <option value="{{imgr}}">{{imgr}}</option>
+            <option value="{{imgr[0]}}">{{imgr[0]}} ({{imgr[1]}} images)</option>
             {% endfor %}
         </select><br>
         Describe the image you are looking for: <br>

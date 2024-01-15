@@ -1,7 +1,7 @@
 import numpy as np
 class Parser:
     def __init__(self, answer):
-        self.answer = answer
+        self.answer = answer+" "
         self.progress = 0
         self.separators = " ,:;?!\n\r"
 
@@ -23,9 +23,17 @@ class Parser:
         word = self.read_word()
         if word is None:
             return None
-        if word[-1] != '%':
+        res = ""
+        pct = False
+        for c in word:
+            if c == '%':
+                pct = True
+                break
+            res += c
+        if not pct:
             return ""
-        return word[:-1]
+        print(res)
+        return res
     
     def crop_info(self):
         pct_ranges = []
