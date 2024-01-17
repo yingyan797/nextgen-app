@@ -1,0 +1,29 @@
+<head>
+    <title>crop details</title>
+    <style>
+        table, th, td {
+            border: 0.5px solid black;
+        }
+    </style>
+</head>
+
+<body>
+    <h1 style="background-color: lightslategray;">Image object detection full results</h1>
+    <form action="/cropres" method="post">
+        <input type="submit" name="action" value="Clear record">
+    </form>
+    <form action="/cropres" method="post">
+        Objects found in the original image: <br>
+        <table><tr><th><input type="checkbox" name="saveannot"></th>
+            <td><img src="{{cropannot}}" alt="annotated"></td></tr></table>
+        Cropped images each containing an object detected:
+        <table>
+            {% if res %}
+            {% for ri in res %}
+            <tr><th><input type="checkbox" name="crop{{ri[1]}}"></th>
+                <td><img src="{{ri[0]}}" alt="{{ri}}"></td></tr>
+            {% endfor %}
+            {% endif %}
+        </table>
+    </form>
+    

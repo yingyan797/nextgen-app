@@ -1,6 +1,6 @@
 from PIL import Image, ImageDraw, ImageFont
 import numpy as np
-import os
+import os, glob
 from answer_parser import Parser
 
 def create_samples(group_name):
@@ -20,21 +20,22 @@ def create_samples(group_name):
                     i += 1
 
 def img_combine(group_name):
-    num = imggroup_find(group_name)
-    if not num:
+    pfx = "static/imggroups/"
+    imgs = os.listdir(pfx+group_name)
+    if not imgs:
         return
     avgrat = 0
-    for i in range(num):
-        im = Image.open("static/"+group_name+'/'+str(i)+".png")
+    for i in imgs:
+        im = Image.open(pfx+group_name+i)
         w, h = im.size
         avgrat += w/h
-    avgrat /= num
+    avgrat /= len(imgs)
     usz = int(120*avgrat), 120
     if avgrat < 1:
         usz = 120, int(120/avgrat)
-    colnum = int(np.ceil(np.sqrt(num)))
+    colnum = int(np.ceil(np.sqrt(len(imgs))))
     rownum = colnum-1
-    if rownum*colnum < num:
+    if rownum*colnum < len(imgs):
         rownum += 1
     wd = usz[1]+10
     ht = usz[0]+10
@@ -42,11 +43,12 @@ def img_combine(group_name):
     i = 0
     for c in range(colnum):
         for r in range(rownum):
-            im = Image.open("static/"+group_name+'/'+str(i)+".png").resize(usz)
+            im = Image.open(pfx+group_name+imgs[i]).resize(usz)
             img_template[c*wd:c*wd+usz[1], r*ht:r*ht+usz[0]] = im
             i += 1
     # mask = Image.new(mode="1", size=im_base.size)
-    Image.fromarray(img_template).save("static/"+group_name+"/allnum.png")
+    Image.fromarray(img_template).save(pfx+"all.png")
+    return imgs
 
 def crop_multiple(img_name, instr):
     im = Image.open("static/imgorig/"+img_name)
@@ -63,55 +65,37 @@ def crop_multiple(img_name, instr):
         i += 1
     return res
 
-def imggroup_find(group_name):
-    f = open("static/imggroups.csv", "r")
-    while True:
-        line = f.readline()
-        if not line:
-            return None
-        info = line[:-1].split(",")
-        if info[0] == group_name:
-            return int(info[1])
+def all_imggroups():
+    pfx = "static/imggroups/"
+    gs = os.listdir(pfx)
+    groups = []
+    for g in gs:
+        groups.append((g, len(os.listdir(pfx+g))))
+    return groups
 
-def imggroup_update(group_name, num):
-    f = open("static/imggroups.csv", "r")
-    lines = f.readlines()
-    f.close()
-    print(lines)
-    f = open("static/imggroups.csv", "w")
-    for i in range(len(lines)):
-        info = lines[i][:-1].split(",")
-        if info[0] == group_name:
-            if num < 0:
-                os.rmdir("static/imggroups/"+group_name)
-                lines.pop(i)
-            else:
-                lines[i] = group_name+","+str(num)+"\n"
-            f.writelines(lines)
-            f.close()
-            return True
-    if num >= 0:
-        lines.append(group_name+","+str(num)+"\n")
-        os.mkdir("static/imggroups/"+group_name)
-        f.writelines(lines)
-        f.close()
-    return False
+def update_imggroups(gfrom, gto, action):
+    if action[:5] == "Clear":
+        for f in os.listdir(pfx):
+            os.remove(pfx+f)
+        return
+    pfx = "static/imggroups/"
+    if gfrom:
+        if action[:6] == "Remove":
+            os.rmdir(pfx+gfrom)
+        elif action[:6] == "Delete":
+            for f in os.listdir(pfx+gfrom):
+                os.remove(pfx+gfrom+f)
+        elif action[:6] == "Rename" and gto:
+            os.rename(pfx+gfrom, pfx+gto)
+    if gto and action[:6] == "Create":
+        os.mkdir(pfx+gto)
 
-def imggroups_all():
-    res = []
-    f = open("static/imggroups.csv", "r")
-    while True:
-        line = f.readline()
-        if not line:
-            break
-        info = line[:-1].split(",")
-        res.append((info[0], info[1]))
-    f.close()
-    return res
+def update_aicrop(action):
+    pfx = "static/ai_crop/"
+    if action[:5] == "Clear":
+        for f in os.listdir(pfx):
+            os.remove(pfx+f)
 
-def imggroup_addfile(group_name):
-    pass
-    
 # crop_multiple("static/dhabi.png", "To crop the image to focus on Al Lulu Island while maintaining the context of its location, you might consider the following percentage ranges: Width: 10% to 45%, Height: 5% to 50%, These ranges should help you")
 # img_combine("graphics")
 
