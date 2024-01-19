@@ -32,7 +32,6 @@ class Parser:
             res += c
         if not pct:
             return ""
-        print(res)
         return res
     
     def crop_info(self):
@@ -73,7 +72,6 @@ class Parser:
                         num = False
                         break
                 if num:
-                    print(word)
                     res.append(float(word))
                     if i == 3:
                         i = 0

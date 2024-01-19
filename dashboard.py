@@ -42,9 +42,9 @@ def index():
     group = request.form.get("groupt")
     if not group:
         group = request.form.get("groupd")
-    res = []
-    instr = ""
-    loc = ""
+    crops = []
+    findorig = []
+    expl = ""
     if imgcrop:
         desc = request.form.get("cropdesc")
         if desc:
@@ -67,44 +67,24 @@ def index():
                 case _: numdesc += "Not sure how many"
             numdesc += " objects in total is expected to be cropped."
             prompt = "The task is to generate crops of the given image. Please find the following object(s) from the image: "
-            prompt += desc+numdesc+" Answer how to crop by giving the percentage ranges on width and height to keep the original image, format is width a% to b%, height c% to d%. Do this for each object to crop."
+            prompt += desc+numdesc+" Answer how to crop by giving the percentage ranges on width and height to keep the original image, format is width a% to b%, height c% to d%. Accuracy up to 1%. Do this for each object to crop."
             print(prompt)
             pfx = "static/imgorig/"
-            instr = mo.answer(prompt=prompt, image_url=pfx+imgcrop, mtoken=mxtk)
-            crops = imf.crop_multiple(imgcrop, instr)
-            for i in range(len(crops)):
-                res.append((crops[i], i))
-            imgcrop = pfx+imgcrop
+            expl = desc+"\n\n"+mo.answer(prompt=prompt, image_url=pfx+imgcrop, mtoken=mxtk)
+            crops = imf.crop_multiple(imgcrop, expl)
     elif group:
         imgs,c,r = imf.img_combine(group)
         imgdesc = request.form.get("imgdesc")
         f, gdesc = imf.find_imggroup(group)
         if gdesc:
             gdesc = ", all images have the following common features: "+gdesc
-        prompt = "This is a "+str(r)+'*'+str(c)+" grid of small images"+gdesc+". Please find one or more images matching the following description: "+imgdesc+". Answer in this format: row i column j."
-        loc = mo.answer(prompt=prompt, image_url="static/result/all.png", mtoken=100)
-        res = imf.select_multiple(imgs, c, loc)
+        prompt = "This is a "+str(r)+'*'+str(c)+" grid of small images"+gdesc+". Please find one or more images matching the following description: "+imgdesc+". Answer in this format: row i column j. Explain why making the selection."
+        expl = imgdesc+" | "+gdesc+"\n\n"+mo.answer(prompt=prompt, image_url="static/result/all.png", mtoken=100)
+        findorig = ["static/imggroups/"+group+"/"+res for res in imf.select_multiple(imgs, c, expl)]
+        findorig.append("static/result/all.png")
 
     groups = imf.all_imggroups()
-    return render_template('index.html', groups=groups, cropannot=imgcrop, crops=res, cropexpl=instr, findorig=res, group=group, findexpl=loc)
-
-@app.route('/result', methods=['GET', 'POST'])    # main page
-def result():
-    action = request.form.get("action")
-    if action:
-        imf.update_airesult(action)
-        
-    cropannot = request.form.get("cropannot")
-    res = []
-    i = 0
-    while True:
-        r = request.form.get("crops"+str(i))
-        if r:
-            res.append((r,i))
-            i += 1
-        else:
-            break
-    return render_template('result.html', cropannot=cropannot, res=res)
+    return render_template('index.html', groups=groups, crops=crops, findorig=findorig, expl=expl)
 
 @app.route('/imggroups', methods=['GET', 'POST'])    # main page
 def imggroups():

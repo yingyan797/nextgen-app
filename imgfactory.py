@@ -1,6 +1,6 @@
-from PIL import Image, ImageDraw, ImageFont
+from PIL import Image, ImageDraw
 import numpy as np
-import os, glob
+import os
 from answer_parser import Parser
 
 def create_samples(group_name):
@@ -57,21 +57,31 @@ def crop_multiple(img_name, instr):
     im = Image.open("static/imgorig/"+img_name)
     res = [] 
     i = 0
+    imannot = im.copy()
+    annot = ImageDraw.Draw(imannot)
+    pfx = "static/result/"+img_name[:-4]
+    w, h = im.size
+    lw = int(w/200+5)
     for pr in Parser(instr).crop_info():
-        w, h = im.size
         wrange = w*pr[:2]
         hrange = h*pr[2:]
+        annot.line([(wrange[0], hrange[0]),(wrange[1], hrange[0]),(wrange[1], hrange[1]),(wrange[0], hrange[1]),(wrange[0], hrange[0])], fill="red", width=lw)
         imcr = im.crop((wrange[0], hrange[0], wrange[1], hrange[1]))
-        fn = "static/result/"+img_name[:-4]+"(c"+str(i)+").png"
+        fn = pfx+"(c"+str(i)+").png"
         res.append(fn)
         imcr.save(fn)
         i += 1
-    return res
+    annotfile = pfx+"(annot).png"
+    imannot.save(annotfile)
+    return [annotfile]+res
 
 def select_multiple(imgs, cols, instr):
     res = []
     for num in Parser(instr).select_info(cols):
-        res.append(imgs[int(num)-1])
+        i = int(num)
+        if i > len(imgs):
+            break
+        res.append(imgs[i-1])
     return res
 
 def all_imggroups():
@@ -151,6 +161,6 @@ def update_airesult(action):
         for f in os.listdir(pfx):
             os.remove(pfx+f)
 
-# crop_multiple("static/dhabi.png", "To crop the image to focus on Al Lulu Island while maintaining the context of its location, you might consider the following percentage ranges: Width: 10% to 45%, Height: 5% to 50%, These ranges should help you")
+# crop_multiple("cube.png", "width 51% to 100%, height 0% to 100%")
 # img_combine("graphics")
 

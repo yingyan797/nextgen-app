@@ -44,23 +44,6 @@
             <input type="radio" name="num" value="l">> 10; <br>
             <input type="submit" value="Find objects">
         </form>
-        <div class="row">
-          <form action="/result" method="post" target="_blank">
-            <input type="hidden" name="cropannot" value="{{cropannot}}">
-            {% for res in crops %}
-            <input type="hidden" name="crops{{res[1]}}" value="{{res[0]}}">
-            {% endfor %}
-            <h2>Result preview | <input type="submit" value="See full result in detail"></h2>
-          </form> 
-          <div class="column">
-            Original image annotated: <br>
-            <img src="{{cropannot}}" alt="annotated" width="280" height="220">
-          </div>
-          <div class="column">
-            Explanations: <br>
-            <textarea cols="35" rows="10">{{cropexpl}}</textarea>
-          </div>
-        </div>
     </div>
     <div class="column" style="background-color: lightcyan;">
         <h2>Find an image matching your descriptions most closely</h2>
@@ -77,11 +60,35 @@
         <textarea name="imgdesc" cols="50" rows="5"></textarea><br>
         <input type="submit" value="Find image">
         </form>
-        <h2>Result description and explanation</h2>
-        Original images: <br>
-        {% if findorig %}
-        <img src="static/imggroups/{{group}}/{{findorig[0]}}" alt="Original" width="300" height="200"><br>
+    </div></div>
+    <div class="row">
+      <h2>Result and explanation</h2>
+      <div class="column">
+        {% if crops %}
+        <img src="{{crops[0]}}" alt="annotated" width="400" height="300"> object detection preview
+        {% elif findorig %}
+        <img src="{{findorig[0]}}" alt="selection" width="400" height="300">
+        Best matching image: {{findorig[0]}}<br>
         {% endif %}
-        Explanations: <br>
-        <textarea cols="50" rows="10">{{findexpl}}</textarea>
+      </div>
+      <div class="column">
+        AI explanations: <br>
+        <textarea cols="75" rows="15">{{expl}}</textarea>
+      </div>
+    </div>
+    <div class="row">
+      <h2>More details</h2>
+      {% if crops %}
+        image components cropped from object detection: <br>
+        {% for c in crops[1:] %}
+        <img src="{{c}}" alt="cropped">
+        {% endfor %}
+      {% elif findorig %}
+        all possible images overview: <br>
+        <img src="{{findorig[-1]}}" alt="all"> <br>
+        alternative matching images: <br>
+        {% for am in findorig[1:-1] %}
+        <img src="{am}" alt="alternative selection">{{am}} <br>
+        {% endfor %}
+      {% endif %}
     </div>
