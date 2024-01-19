@@ -55,8 +55,35 @@ class Parser:
             pct_ranges.append(rg)
         return pct_ranges
     
-# pa = Parser("? heio 12%, kk 45 29% 5% 4.3% 90 7.55% is ok")
-# print(pa.crop_info())
+    def select_info(self, cols):
+        grammar = ["row", "num", "column", "num"]
+        i = 0
+        res = []
+        while True:
+            word = self.read_word()
+            if word is None:
+                break
+            if grammar[i] != "num":
+                if word.lower() == grammar[i]:
+                    i += 1
+            else:
+                num = True
+                for c in word:
+                    if not c.isdigit() and c != '.':
+                        num = False
+                        break
+                if num:
+                    print(word)
+                    res.append(float(word))
+                    if i == 3:
+                        i = 0
+                    else:
+                        i += 1
+        nums = []
+        while len(res) >= 2:
+            nums.append((res.pop(0)-1)*cols+res.pop(0))
+        return nums
+
 
 
 

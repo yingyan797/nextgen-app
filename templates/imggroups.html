@@ -1,0 +1,32 @@
+<head>
+    <title>image classes</title>
+    <style>
+    table, th, td {
+        border: 0.5px solid black;
+      }
+    </style>
+</head>
+
+<body>
+    <h1 style="background-color: lightgreen;">Manage image classes | <a href="/">Home: AI image tools</a></h1>
+    <form action="/imggroups" method="post">
+        <h2>Create a new image class <input type="submit" name="action" value="Create class +"></h2>
+        <table><tr><th>new class name: </th><td><input type="text" name="groupn"></td></tr>
+        <tr><th>class descriptions: </th><td><textarea name="desc" cols="50" rows="2"></textarea></td></tr></table>
+    </form>
+    <form action="/imggroups" method="post">
+        <h2>Edit image classes <input type="submit" name="action" value="Clear all classes"></h2>
+        Select/Enter an images class:
+        <select name="groupd">
+          {% for g,n in groups %}
+          <option value="{{g}}">{{g}} ({{n}} images)</option>
+          {% endfor %}
+        </select><input type="text" name="groupt"><input type="submit" name="action" value="View class info"><br>
+        <table><tr><th>Actions</th><th>original</th><th>new</th></tr>
+            <tr><th>rename class</th><td>{{gname}}<input type="hidden" name="gname" value="{{gname}}"></td><td><input type="text" name="groupn"></td></tr>
+            <tr><th>change descriptions</th><td><textarea cols="25" rows="5">{{desc}}</textarea></td><td><textarea name="desc" cols="25" rows="5">{{desc}}</textarea></td></tr></table>
+        <input type="submit"  name="action" value="Remove class">
+        <input type="submit"  name="action" value="Delete all images">
+        <input type="submit" name="action" value="Confirm changes">
+    </form>
+    

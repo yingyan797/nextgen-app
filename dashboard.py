@@ -38,17 +38,13 @@ def sample():
 @app.route('/', methods=['GET', 'POST'])    # main page
 def index():
     print(request.form)
-    action = request.form.get("action")
-    if action:
-        group = request.form.get("groupt")
-        if not group:
-            group = request.form.get("groupd")
-        newgroup = request.form.get("groupn")
-        imf.update_imggroups(group, newgroup, action)
-            
     imgcrop = request.form.get("imgcrop")
+    group = request.form.get("groupt")
+    if not group:
+        group = request.form.get("groupd")
     res = []
     instr = ""
+    loc = ""
     if imgcrop:
         desc = request.form.get("cropdesc")
         if desc:
@@ -79,17 +75,24 @@ def index():
             for i in range(len(crops)):
                 res.append((crops[i], i))
             imgcrop = pfx+imgcrop
+    elif group:
+        imgs,c,r = imf.img_combine(group)
+        imgdesc = request.form.get("imgdesc")
+        f, gdesc = imf.find_imggroup(group)
+        if gdesc:
+            gdesc = ", all images have the following common features: "+gdesc
+        prompt = "This is a "+str(r)+'*'+str(c)+" grid of small images"+gdesc+". Please find one or more images matching the following description: "+imgdesc+". Answer in this format: row i column j."
+        loc = mo.answer(prompt=prompt, image_url="static/result/all.png", mtoken=100)
+        res = imf.select_multiple(imgs, c, loc)
 
-    imggroups = imf.all_imggroups()
-    print(res)
-    return render_template('index.html', imggroups=imggroups, cropannot=imgcrop, crops=res, cropexpl=instr)
+    groups = imf.all_imggroups()
+    return render_template('index.html', groups=groups, cropannot=imgcrop, crops=res, cropexpl=instr, findorig=res, group=group, findexpl=loc)
 
-@app.route('/cropres', methods=['GET', 'POST'])    # main page
-def cropres():
-    print(request.form)
+@app.route('/result', methods=['GET', 'POST'])    # main page
+def result():
     action = request.form.get("action")
     if action:
-        imf.update_aicrop(action)
+        imf.update_airesult(action)
         
     cropannot = request.form.get("cropannot")
     res = []
@@ -101,7 +104,39 @@ def cropres():
             i += 1
         else:
             break
-    return render_template('cropres.html', cropannot=cropannot, res=res)
+    return render_template('result.html', cropannot=cropannot, res=res)
+
+@app.route('/imggroups', methods=['GET', 'POST'])    # main page
+def imggroups():
+    print(request.form)
+    action = request.form.get("action")
+    group = request.form.get("groupt")
+    if not group:
+        group = request.form.get("groupd")
+    if not group:
+        group = request.form.get("gname")
+    
+    gname = group
+    desc = ""
+    if action:
+        newgroup = request.form.get("groupn")
+        gdesc = request.form.get("desc")
+        if action[:4] == "View":
+            gname = group
+            found, d = imf.find_imggroup(group)
+            if not found:
+                gname = "**image class not exist**"
+            else:
+                desc = d        
+            
+        elif action[:6] == "Create":
+            imf.reg_imggroup(newgroup, gdesc)
+        else:
+            imf.update_imggroup(group, newgroup, gdesc, action)
+    
+    groups = imf.all_imggroups()
+    return render_template('imggroups.html', gname=gname, desc=desc, groups=groups)
+            
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)

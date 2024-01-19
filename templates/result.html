@@ -1,5 +1,5 @@
 <head>
-    <title>crop details</title>
+    <title>AI image details</title>
     <style>
         table, th, td {
             border: 0.5px solid black;
@@ -8,11 +8,11 @@
 </head>
 
 <body>
-    <h1 style="background-color: lightslategray;">Image object detection full results</h1>
-    <form action="/cropres" method="post">
+    <h1 style="background-color: lightslategray;">AI image detection/search full result</h1>
+    <form action="/result" method="post">
         <input type="submit" name="action" value="Clear record">
     </form>
-    <form action="/cropres" method="post">
+    <form action="/result" method="post">
         Objects found in the original image: <br>
         <table><tr><th><input type="checkbox" name="saveannot"></th>
             <td><img src="{{cropannot}}" alt="annotated"></td></tr></table>

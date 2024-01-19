@@ -29,21 +29,6 @@
 
 <body>
     <h1 style="background-color: lightskyblue;">Y-Detective AI image operation and detection tools | <a href="/sample">Clarifai sample app</a></h1>
-    <form action="/" method="post">
-      <h2>Manage image classes <input type="submit" name="action" value="Clear all classes"></h2>
-      Select or enter an existing class of images:
-      <select name="groupd">
-        {% for g,n in imggroups %}
-        <option value="{{g}}">{{g}} ({{n}} images)</option>
-        {% endfor %}
-      </select><input type="text" name="groupt">
-      <input type="submit"  name="action" value="Remove class">
-      <input type="submit"  name="action" value="Delete all images"><br>
-      Enter a new class name:
-      <input type="text" name="groupn"> (e.g., suspect John Smith, unknown white car, etc.)
-      <input type="submit" name="action" value="Create new class">
-      <input type="submit" name="action" value="Rename existing class">
-  </form>
     <div class="row">
     <div class="column" style="background-color: lightgoldenrodyellow;">
         <h2>Find a set of useful objects from an image</h2>
@@ -60,7 +45,7 @@
             <input type="submit" value="Find objects">
         </form>
         <div class="row">
-          <form action="/cropres" method="post" target="_blank">
+          <form action="/result" method="post" target="_blank">
             <input type="hidden" name="cropannot" value="{{cropannot}}">
             {% for res in crops %}
             <input type="hidden" name="crops{{res[1]}}" value="{{res[0]}}">
@@ -79,23 +64,24 @@
     </div>
     <div class="column" style="background-color: lightcyan;">
         <h2>Find an image matching your descriptions most closely</h2>
-        <form action="/imagelab" method="post">
+        <form action="/" method="post">
         Enter or select the class of image to find through: <br>
-        <input type="text" name="imggroup"> 
-        <select name="group">
-            {% for imgr in imggroups %}
+        <input type="text" name="groupt"> 
+        <select name="groupd">
+            {% for imgr in groups %}
             <option value="{{imgr[0]}}">{{imgr[0]}} ({{imgr[1]}} images)</option>
             {% endfor %}
-        </select><br>
+        </select>
+        <a href="/imggroups">View and edit image classes</a><br>
         Describe the image you are looking for: <br>
         <textarea name="imgdesc" cols="50" rows="5"></textarea><br>
         <input type="submit" value="Find image">
         </form>
         <h2>Result description and explanation</h2>
         Original images: <br>
-        <img src="findorig" alt="Original"><br>
-        Best match: <br>
-        <img src="findres" alt="Result"> <br>
+        {% if findorig %}
+        <img src="static/imggroups/{{group}}/{{findorig[0]}}" alt="Original" width="300" height="200"><br>
+        {% endif %}
         Explanations: <br>
         <textarea cols="50" rows="10">{{findexpl}}</textarea>
     </div>
