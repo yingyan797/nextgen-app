@@ -6,11 +6,10 @@ import base64
 load_dotenv()
 clarifai_pat = os.environ["CLARIFAI_PAT"]
 
-def image_gen(prompt="Mongolian dance", infparams=dict(quality="standard", size= '1024x1024'), dest=""):
-    if not dest:
-        dest = "static/res_image.png"
-    else:
-        dest = "static/"+dest+".png"
+def image_gen(prompt="Mongolian dance", infparams=dict(quality="standard", size= '1024x1024'), fn=""):
+    if not fn:
+        fn = "imggen"
+    dest = "static/result/"+fn+".png"
     model_prediction = Model("https://clarifai.com/openai/dall-e/models/dall-e-3").predict_by_bytes(prompt.encode(), input_type="text", inference_params=infparams)
     output_base64 = model_prediction.outputs[0].data.image.base64
     f = open(dest, "wb")
@@ -32,11 +31,10 @@ def answer(prompt, image_url="", mtoken = 250, infparams=dict(temperature=0.2), 
         f.close()
     return ans
 
-def text_speech(text, infparams=dict(voice="alloy", speed=1.0), dest=""):
-    if not dest:
-        dest = "static/res_audio.mp3"
-    else:
-        dest = "static/"+dest+".mp3"
+def text_speech(text, infparams=dict(voice="alloy", speed=1.0), fn=""):
+    if not fn:
+        fn = "speech"
+    dest = "static/result/"+fn+".mp3"
     model_prediction = Model("https://clarifai.com/openai/tts/models/openai-tts-1").predict_by_bytes(text.encode(), input_type="text", inference_params=infparams)
     output_base64 = model_prediction.outputs[0].data.audio.base64
     f = open(dest, "wb")

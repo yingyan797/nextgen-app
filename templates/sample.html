@@ -1,38 +1,38 @@
 <head>
-    <title>Nextgen sample application</title>
+    <title>Clarifai applications</title>
 </head>
 
 <body>
     <h1 style="background-color: lightseagreen;">
-        Clarifai API sample application for Nextgen GPT | <a href="/">Home: AI image tools</a>
+        image discussion, image generation, and text-to-speech | <a href="/">Home: AI image tools</a>
     </h1>
     <form action="/sample" method="post">
-    <h2>Upload image to discuss about (Optional)</h2>
-    <input type="file" name="img"> -- from "static/" directory<br>
+    <h2>If you want to ask questions about an image, upload here (optional)</h2>
+    <input type="file" name="img"> -- from "static/imgorig" directory<br>
     <h2>Describe your question/prompt:</h2>
     <textarea name="prompt" cols="75" rows="2"></textarea><br>
     Expect token limit (optional, default 250): <input type="number" name="mtoken" min="5" max="500"><br>
-    Save result file name (optional): <input type="text" name="dest"><br>
+    Name the result image/audio (optional): <input type="text" name="fn">
     <input type="submit" name="image_gen" value="Generate image">
-    <input type="submit" name="ask" value="Ask question (about the image if provided)">
+    <input type="submit" name="ask" value="Ask question">
     <input type="submit" name="tts" value="Read the text aloud">
     </form>
     {% if prompt %}
     <h2>Question/Requirement:</h2>
     {{prompt}}<br>
-        {% if image_url %}
-        <img src="{{image_url}}" alt="question image" width="500" height="400">
-        {% endif %}
     {% endif %}
     {% if result==1 %}
         <h2>Result image</h2>
-        <img src="static/res_image.png" alt="result">
+        <img src="static/result/{{fn}}.png" alt="result">
     {% elif result==3 %}
         <h2>Result speech audio</h2>
-        <audio controls><source src="static/res_audio.mp3" type="audio/mpeg"></audio>
+        <audio controls><source src="static/result/{{fn}}.mp3" type="audio/mpeg"></audio>
     {% elif result==2 %}
         <h2>AI answer to the question</h2>
-        <textarea cols="75" rows="10">{{answer}}</textarea>
+        {% if image_url %}
+        <img src="{{image_url}}" alt="question image" width="420" height="280">
+        {% endif %}
+        <textarea cols="50" rows="15">{{answer}}</textarea>
     {% endif %}
     
     

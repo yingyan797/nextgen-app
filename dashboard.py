@@ -11,29 +11,31 @@ def sample():
     res = 0 # image 1 answer 2 audio 3
     ans = ""
     image_url = ""
-    dest = request.form.get("dest")
-    if not dest:
-        dest = ""
+    fn = ""
     if prompt:
+        fn = request.form.get("fn")
         if request.form.get('image_gen'):
-            mo.image_gen(prompt=prompt, dest=dest)
+            if not fn:
+                fn = "imggen"
+            mo.image_gen(prompt=prompt, fn=fn)
             res = 1
         elif request.form.get('ask'):
             img = request.form.get('img')
             if img:
-                image_url = "static/"+img
+                image_url = "static/imgorig/"+img
             mtoken = request.form.get("mtoken")
             if mtoken:
                 mtoken = int(mtoken)
             else:
                 mtoken = 250
-            ans = mo.answer(prompt=prompt, image_url=image_url, mtoken=mtoken, dest=dest)
+            ans = mo.answer(prompt=prompt, image_url=image_url, mtoken=mtoken)
             res = 2
         elif request.form.get('tts'):
-            mo.text_speech(text=prompt, dest=dest)
+            if not fn:
+                fn = "speech"
+            mo.text_speech(text=prompt, fn=fn)
             res = 3
-    print(res)
-    return render_template('sample.html', image_url=image_url, prompt=prompt, result=res, answer=ans)
+    return render_template('sample.html', image_url=image_url, prompt=prompt, fn=fn, result=res, answer=ans)
 
 @app.route('/', methods=['GET', 'POST'])    # main page
 def index():
@@ -46,6 +48,7 @@ def index():
     findorig = []
     expl = ""
     if imgcrop:
+        w,h = imf.Image.open("static/imgorig/"+imgcrop).size
         desc = request.form.get("cropdesc")
         if desc:
             objnum = request.form.get("num")
@@ -66,8 +69,8 @@ def index():
                     mxtk += 800
                 case _: numdesc += "Not sure how many"
             numdesc += " objects in total is expected to be cropped."
-            prompt = "The task is to generate crops of the given image. Please find the following object(s) from the image: "
-            prompt += desc+numdesc+" Answer how to crop by giving the percentage ranges on width and height to keep the original image, format is width a% to b%, height c% to d%. Accuracy up to 1%. Do this for each object to crop."
+            prompt = "Please find the following object(s) from the image (size "+str(w)+'*'+str(h)+"): "
+            prompt += desc+numdesc+" For each one, answer how to crop by giving the percentage ranges on width and height, format: width a% to b%, height c% to d%. Try to keep the whole object."
             print(prompt)
             pfx = "static/imgorig/"
             expl = desc+"\n\n"+mo.answer(prompt=prompt, image_url=pfx+imgcrop, mtoken=mxtk)
@@ -77,10 +80,10 @@ def index():
         imgdesc = request.form.get("imgdesc")
         f, gdesc = imf.find_imggroup(group)
         if gdesc:
-            gdesc = ", all images have the following common features: "+gdesc
-        prompt = "This is a "+str(r)+'*'+str(c)+" grid of small images"+gdesc+". Please find one or more images matching the following description: "+imgdesc+". Answer in this format: row i column j. Explain why making the selection."
-        expl = imgdesc+" | "+gdesc+"\n\n"+mo.answer(prompt=prompt, image_url="static/result/all.png", mtoken=100)
-        findorig = ["static/imggroups/"+group+"/"+res for res in imf.select_multiple(imgs, c, expl)]
+            gdesc = ". All small pictures have common features: "+gdesc
+        prompt = "This is a "+str(r)+'*'+str(c)+" grid of small pictures, each has an index on the top left"+gdesc+". Select the indexes of pictures best matching the following descriptions: "+imgdesc+". Answer format: Number a, Number b... Explain the selection."
+        expl = imgdesc+gdesc+"\n\n"+mo.answer(prompt=prompt, image_url="static/result/all.png", mtoken=100)
+        findorig = ["static/imggroups/"+group+"/"+res for res in imf.select_multiple(imgs, expl)]
         findorig.append("static/result/all.png")
 
     groups = imf.all_imggroups()
@@ -90,6 +93,9 @@ def index():
 def imggroups():
     print(request.form)
     action = request.form.get("action")
+    pre = request.form.get("pre")
+    if pre:
+        action = pre
     group = request.form.get("groupt")
     if not group:
         group = request.form.get("groupd")
@@ -98,6 +104,9 @@ def imggroups():
     
     gname = group
     desc = ""
+    allclasses = []
+    created = 3
+    ask = False
     if action:
         newgroup = request.form.get("groupn")
         gdesc = request.form.get("desc")
@@ -110,12 +119,26 @@ def imggroups():
                 desc = d        
             
         elif action[:6] == "Create":
-            imf.reg_imggroup(newgroup, gdesc)
+            if newgroup:
+                if imf.reg_imggroup(newgroup, gdesc):
+                    created = 1
+                else:
+                    created = 0
+        elif action[:7] != "Confirm":
+            if request.form.get("Yes"):
+                imf.update_imggroup(group, newgroup, gdesc, action)
+            elif request.form.get("No") is None:
+                ask = True
         else:
             imf.update_imggroup(group, newgroup, gdesc, action)
+            created = 2
+    
+    elif request.form.get("allclasses"):
+        allclasses = imf.imggroups_nd()
     
     groups = imf.all_imggroups()
-    return render_template('imggroups.html', gname=gname, desc=desc, groups=groups)
+    return render_template('imggroups.html', gname=gname, desc=desc, groups=groups, 
+                           allclasses=allclasses, ask=ask, action=action, created=created)
             
 
 if __name__ == '__main__':

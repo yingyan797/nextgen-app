@@ -28,7 +28,7 @@
 </head>
 
 <body>
-    <h1 style="background-color: lightskyblue;">Y-Detective AI image operation and detection tools | <a href="/sample">Clarifai sample app</a></h1>
+    <h1 style="background-color: lightskyblue;">Y-Detective AI image operation and detection tools | <a href="/sample">More applications</a></h1>
     <div class="row">
     <div class="column" style="background-color: lightgoldenrodyellow;">
         <h2>Find a set of useful objects from an image</h2>
@@ -41,7 +41,7 @@
             <input type="radio" name="num" value="1">Single (1); 
             <input type="radio" name="num" value="s">2-4; 
             <input type="radio" name="num" value="m">5-10; 
-            <input type="radio" name="num" value="l">> 10; <br>
+            <input type="radio" name="num" value="l">> 10; 
             <input type="submit" value="Find objects">
         </form>
     </div>
@@ -57,38 +57,34 @@
         </select>
         <a href="/imggroups">View and edit image classes</a><br>
         Describe the image you are looking for: <br>
-        <textarea name="imgdesc" cols="50" rows="5"></textarea><br>
+        <textarea name="imgdesc" cols="75" rows="4"></textarea>
         <input type="submit" value="Find image">
         </form>
     </div></div>
+    <h2>Result overview</h2>
+    {% if crops %}
     <div class="row">
-      <h2>Result and explanation</h2>
       <div class="column">
-        {% if crops %}
-        <img src="{{crops[0]}}" alt="annotated" width="400" height="300"> object detection preview
-        {% elif findorig %}
-        <img src="{{findorig[0]}}" alt="selection" width="400" height="300">
-        Best matching image: {{findorig[0]}}<br>
-        {% endif %}
+        <img src="{{crops[0]}}" alt="annotated" width="420" height="285">
       </div>
       <div class="column">
         AI explanations: <br>
         <textarea cols="75" rows="15">{{expl}}</textarea>
       </div>
     </div>
-    <div class="row">
-      <h2>More details</h2>
-      {% if crops %}
-        image components cropped from object detection: <br>
-        {% for c in crops[1:] %}
-        <img src="{{c}}" alt="cropped">
-        {% endfor %}
-      {% elif findorig %}
-        all possible images overview: <br>
-        <img src="{{findorig[-1]}}" alt="all"> <br>
-        alternative matching images: <br>
-        {% for am in findorig[1:-1] %}
-        <img src="{am}" alt="alternative selection">{{am}} <br>
-        {% endfor %}
-      {% endif %}
+    {% elif findorig %}
+    {% for imd in findorig[:-1] %}
+      <img src="{{imd}}" alt="alternative selection" width="420" height="285">
+      <textarea readonly cols="15" rows="5">{{imd}}</textarea> 
+    {% endfor %}
+    <h2>Summary and explanations</h2>
+    <textarea cols="75" rows="15">{{expl}}</textarea> <br>
+    <img src="{{findorig[-1]}}" alt="selection">
+    {% endif %}
+    {% if crops %}
+      <h2>All objects cropped from the original image</h2>
+      {% for c in crops[1:] %}
+      <img src="{{c}}" alt="cropped">
+      {% endfor %}
+    {% endif %}
     </div>
