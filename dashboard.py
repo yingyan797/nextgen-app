@@ -139,7 +139,11 @@ def imggroups():
     groups = imf.all_imggroups()
     return render_template('imggroups.html', gname=gname, desc=desc, groups=groups, 
                            allclasses=allclasses, ask=ask, action=action, created=created)
-            
+
+@app.route('/clear', methods=['GET', 'POST'])    # main page
+def clear():
+    imf.clear_airesult()
+    return render_template('index.html')      
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)

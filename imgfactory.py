@@ -176,11 +176,10 @@ def imggroups_nd():
         else:
             return info
 
-def update_airesult(action):
+def clear_airesult():
     pfx = "static/result/"
-    if action[:5] == "Clear":
-        for f in os.listdir(pfx):
-            os.remove(pfx+f)
+    for f in os.listdir(pfx):
+        os.remove(pfx+f)
 
 # crop_multiple("cube.png", "width 51% to 100%, height 0% to 100%")
 # img_combine("graphics")
