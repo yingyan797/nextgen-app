@@ -69,7 +69,7 @@
       </div>
       <div class="column">
         AI explanations: <br>
-        <textarea cols="75" rows="15">{{expl}}</textarea>
+        <textarea readonly cols="75" rows="15">{{expl}}</textarea>
       </div>
     </div>
     {% elif findorig %}
@@ -78,7 +78,7 @@
       <textarea readonly cols="15" rows="5">{{imd}}</textarea> 
     {% endfor %}
     <h2>Summary and explanations</h2>
-    <textarea cols="75" rows="15">{{expl}}</textarea> <br>
+    <textarea readonly cols="75" rows="15">{{expl}}</textarea> <br>
     <img src="{{findorig[-1]}}" alt="selection">
     {% endif %}
     {% if crops %}

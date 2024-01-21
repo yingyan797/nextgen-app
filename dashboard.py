@@ -48,7 +48,7 @@ def index():
     findorig = []
     expl = ""
     if imgcrop:
-        w,h = imf.Image.open("static/imgorig/"+imgcrop).size
+        # w,h = imf.Image.open("static/imgorig/"+imgcrop).size
         desc = request.form.get("cropdesc")
         if desc:
             objnum = request.form.get("num")
@@ -68,9 +68,9 @@ def index():
                     numdesc += "A large number of (over 10)"
                     mxtk += 800
                 case _: numdesc += "Not sure how many"
-            numdesc += " objects in total is expected to be cropped."
-            prompt = "Please find the following object(s) from the image (size "+str(w)+'*'+str(h)+"): "
-            prompt += desc+numdesc+" For each one, answer how to crop by giving the percentage ranges on width and height, format: width a% to b%, height c% to d%. Try to keep the whole object."
+            numdesc += " such item(s) exists."
+            prompt = "Te task is to calculate the locations of certain item(s) in the image. The items are described as follows: "
+            prompt += desc+numdesc+" For each item, calculate the percentages it starts and ends on the image's width and height, answer format: width a% to b%, height c% to d%. The values should cover the entire item and place it in the center."
             print(prompt)
             pfx = "static/imgorig/"
             expl = desc+"\n\n"+mo.answer(prompt=prompt, image_url=pfx+imgcrop, mtoken=mxtk)

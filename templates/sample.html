@@ -19,7 +19,7 @@
     </form>
     {% if prompt %}
     <h2>Question/Requirement:</h2>
-    {{prompt}}<br>
+    <textarea readonly cols="100" rows="4">{{prompt}}</textarea><br>
     {% endif %}
     {% if result==1 %}
         <h2>Result image</h2>
@@ -32,7 +32,7 @@
         {% if image_url %}
         <img src="{{image_url}}" alt="question image" width="420" height="280">
         {% endif %}
-        <textarea cols="50" rows="15">{{answer}}</textarea>
+        <textarea readonly cols="50" rows="15">{{answer}}</textarea>
     {% endif %}
     
     
