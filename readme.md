@@ -14,3 +14,5 @@ GPT-4 Vision, DALL E image generation, and OpenAI text to speech are used.
 To use our AI tools, please obtain a Clarifai access key, create a .env file in the root directory, and put the key in the .env file as follows:
 
 CLARIFAI_PAT="Your access key"
+
+To launch our program, open "main.py" and click run. The webpage will be in local host.
