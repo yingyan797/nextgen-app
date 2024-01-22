@@ -25,7 +25,6 @@ def answer(prompt, image_url="", mtoken = 250, infparams=dict(temperature=0.2), 
         b64img = base64.b64encode(f.read()).decode('utf-8')
         f.close()
         infparams["image_base64"] = b64img
-    print(image_url, infparams)
     model_prediction = Model("https://clarifai.com/openai/chat-completion/models/gpt-4-"+modelname).predict_by_bytes(prompt.encode(), input_type="text", inference_params=infparams)
     ans = model_prediction.outputs[0].data.text.raw
     if dest:

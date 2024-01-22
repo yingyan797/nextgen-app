@@ -71,7 +71,6 @@ def index():
             numdesc += " such item(s) exists."
             prompt = "The task is to calculate the locations of certain item(s) in the image. The items are described as follows: "
             prompt += desc+numdesc+" For each item, calculate the percentages it starts and ends on the image's width and height, answer format: width a% to b%, height c% to d%. The values should cover the entire item and place it in the center."
-            print(prompt)
             pfx = "static/imgorig/"
             expl = desc+"\n\n"+mo.answer(prompt=prompt, image_url=pfx+imgcrop, mtoken=mxtk)
             crops = imf.crop_multiple(imgcrop, expl)
