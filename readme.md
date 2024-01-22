@@ -8,5 +8,9 @@ Combining computer vision and natural language processing, the program provides 
 4. Ask questions about an image
 5. Text to speech generation
 
+For object cropping, please select the image from "static/imgorig/" directory; for image selection, select from "static/imggroups/{class name}/" directory. For both, the result will be saved to "static/result/".
+
 GPT-4 Vision, DALL E image generation, and OpenAI text to speech are used.
-To use our AI tools, please obtain a Clarifai access key and put it in the .env file.
+To use our AI tools, please obtain a Clarifai access key, create a .env file in the root directory, and put the key in the .env file as follows:
+
+CLARIFAI_PAT="Your access key"
